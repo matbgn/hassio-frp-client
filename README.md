@@ -13,30 +13,15 @@ Read more about the project: https://github.com/fatedier/frp
 
 # Example for home assistant
 
-I don't use frp server directly to expose home assistant to the net, but have a nginx before it so a have next config
-
-### nginx config
+### Update configuration.yaml config
 
 ```
-upstream frps {
-    server 0.0.0.0:8080;
-}
-
-server {
-    listen 443 ssl;
-    server_name <SERVER_NAME>;
-
-    location / {
-        proxy_pass http://frps;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host frps123home.hidden; #$host;
-        proxy_cache_bypass $http_upgrade;
-        proxy_http_version 1.1;
-    }
-
-}
-
+# allow proxy via frp server
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+    - 127.0.0.1
 ```
 
 ### frp server config (frps.ini)
